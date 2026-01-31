@@ -1,0 +1,18 @@
+Create Spacecraft Sat;
+Sat.SMA = 6778;
+Sat.ECC = 0.001;
+Sat.INC = 51.6;
+
+Create ImpulsiveBurn DeorbitBurn;
+DeorbitBurn.Element1 = -0.1;
+
+Create Propagator Prop;
+
+Create OrbitView View;
+View.Add = {Sat, Earth};
+View.ViewScaleFactor = 3;
+
+BeginMissionSequence;
+
+Maneuver DeorbitBurn(Sat);
+Propagate Prop(Sat) {Sat.Earth.Altitude = 100};

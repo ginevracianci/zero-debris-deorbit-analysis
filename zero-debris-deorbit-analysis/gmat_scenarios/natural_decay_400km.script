@@ -1,0 +1,32 @@
+Create Spacecraft Sat400;
+Sat400.DateFormat = UTCGregorian;
+Sat400.Epoch = '01 Jan 2025 12:00:00.000';
+Sat400.SMA = 6778;
+Sat400.ECC = 0.001;
+Sat400.INC = 51.6;
+Sat400.DryMass = 500;
+Sat400.Cd = 2.2;
+Sat400.DragArea = 10;
+
+Create MSISE90 Atmos;
+
+Create ForceModel FM;
+FM.CentralBody = Earth;
+FM.PointMasses = {Earth};
+FM.Drag.AtmosphereModel = Atmos;
+
+Create Propagator Prop;
+Prop.FM = FM;
+
+Create OrbitView EarthView;
+EarthView.Add = {Sat400, Earth};
+EarthView.ViewScaleFactor = 3;
+
+Create ReportFile AltitudeReport;
+AltitudeReport.Filename = 'C:/Users/GINEVRA/Desktop/zero-debris-deorbit-analysis/data/altitude_data.txt';
+AltitudeReport.Add = {Sat400.ElapsedDays, Sat400.Earth.Altitude};
+
+BeginMissionSequence;
+
+Propagate Prop(Sat400) {Sat400.ElapsedDays = 365};
+Report AltitudeReport Sat400.ElapsedDays Sat400.Earth.Altitude;

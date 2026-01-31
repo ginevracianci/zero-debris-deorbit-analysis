@@ -1,0 +1,54 @@
+%----------------------------------------
+% Natural Decay Analysis - 600km LEO
+% ESA Zero-Debris Compliance Study
+%----------------------------------------
+
+Create Spacecraft Sat600;
+Sat600.DateFormat = UTCGregorian;
+Sat600.Epoch = '01 Jan 2025 12:00:00.000';
+Sat600.SMA = 6978;
+Sat600.ECC = 0.001;
+Sat600.INC = 98.0;
+Sat600.DryMass = 500;
+Sat600.Cd = 2.2;
+Sat600.DragArea = 10;
+
+%----------------------------------------
+% Atmosphere Model
+%----------------------------------------
+
+Create MSISE90 Atmos;
+
+%----------------------------------------
+% Force Model with Drag
+%----------------------------------------
+
+Create ForceModel FM;
+FM.CentralBody = Earth;
+FM.PointMasses = {Earth};
+FM.Drag.AtmosphereModel = Atmos;
+
+Create Propagator Prop;
+Prop.FM = FM;
+
+%----------------------------------------
+% Output
+%----------------------------------------
+
+Create ReportFile DecayData;
+DecayData.Filename = '../data/natural_decay_600km.txt';
+DecayData.Add = {Sat600.UTCGregorian, Sat600.Earth.Altitude};
+
+Create OrbitView EarthView;
+EarthView.Add = {Sat600, Earth};
+EarthView.ViewScaleFactor = 3;
+
+%----------------------------------------
+% Mission Sequence
+%----------------------------------------
+
+BeginMissionSequence;
+
+While Sat600.Earth.Altitude > 100
+    Propagate Prop(Sat600) {Sat600.ElapsedDays = 30};
+EndWhile;
