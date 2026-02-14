@@ -2,7 +2,7 @@
 
 ESA-compliant end-of-life disposal analysis for LEO satellites using multi-tool approach.
 
-## Overview
+## Overview 
 
 Comprehensive trade study analyzing natural decay vs active deorbit strategies for LEO satellites (400-800 km), evaluating compliance with ESA's 25-year post-mission disposal requirement.
 
